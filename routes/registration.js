@@ -3,7 +3,7 @@ var router = express.Router();
 var mongojs = require('mongojs');
 var userService = require('../services/user.service');
 
-var db = mongojs('mongodb://username:password@ds133296.mlab.com:33296/chatproject', ['users', 'chats']);
+var db = mongojs('mongodb://username:pw@ds133296.mlab.com:33296/chatproject', ['users', 'chats']);
 
 //routes - fun concept, maybe do it later
 //router.get('/users', getAll);

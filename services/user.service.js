@@ -6,7 +6,7 @@ var Q = require('q');
 var mongojs = require('mongojs');
 var mongo = require('mongoskin');
 
-var db = mongojs('mongodb://favoritefave:hallo34@ds133296.mlab.com:33296/chatproject', ['users']);
+var db = mongojs('mongodb://username:pw@ds133296.mlab.com:33296/chatproject', ['users']);
 
 
 var service = {};
