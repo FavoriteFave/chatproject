@@ -1,64 +1,81 @@
 var express = require('express');
 var router = express.Router();
-var mongo = require('mongodb').MongoClient;
-var mongoose = require('mongoose')
-var app = express();
-var io = require('socket.io').listen(4000).sockets;
+var mongojs = require('mongojs');
+var userService = require('../services/user.service');
 
+var db = mongojs('mongodb://favoritefave:hallo34@ds133296.mlab.com:33296/chatproject', ['users', 'chats']);
 
-mongo.connect('mongodb://favoritefave:hallo34@ds133296.mlab.com:33296/chatproject', function(err, db) {
-  if(err) {
-    throw err;
-  }
-  console.log('Mongodb connected');
-
-  io.on('connection', function(socket) {
-    console.log('connected to IO SOCKET');
-    const myDB = db.db('chatproject');
-    let chat = myDB.collection('chats');
-
-    /*socket.on('disconnect', function() {
-      console.log('user disconnected');
-    })*/
-
-    sendStatus = function(s){
-      socket.emit('status', s);
-    }
-
-    //get chat
-    chat.find().limit(100).sort({_id:1}).toArray(function(err, res) {
-      if(err){
-        throw err;
-      }
-      //emit messages
-      io.emit('output', res);
-    });
-    //handle inpit
-    socket.on('input', function(data){
-      let message = data.message;
-      let username = data.user;
-
-      if(message == '' || username == ''){
-        sendStatus('Please enter a message');
+//authenticate a user
+router.post('/authenticate', function(req, res) {
+  userService.authenticate(req.body.username, req.body.password)
+    .then(function(user) {
+      if(user) {
+        //success authentication
+        res.send(user);
       } else {
-        //insert in database
-        chat.insert({ message: message, username: username }, function(err, result) {
-          if(err) return console.log(err);
-          io.emit('output', [data]);
-          console.log('saved to database');
-          //io.emit('output', [data]);
-
-          //send status Object
-          sendStatus({
-            message: 'Message sent',
-            clear: true
-          });
-        });
+        //authentication failed
+        res.status(400).send('Username or password incorrect');
       }
+    })
+    .catch(function(err) {
+      res.status(400).send(err);
     });
+});
+//get all the user
+router.get('/users', function(req, res, next){
+  db.users.find(function(err, users){
+    if(err){
+      res.send(err);
+    }
+    res.json(users);
   });
 });
 
+//get single user
+router.get('/user/:id', function(req, res, next) {
+  db.users.findOne({_id: mongojs.ObjectId(req.params.id)}, function(err, usr){
+    if(err){
+      res.send(err);
+    }
+    res.json(usr);
+  });
+});
 
+//save a new user
+router.post('/user', function(req, res) {
+  let user = req.body;
+  userService.create(user)
+    .then(function() {
+      res.sendStatus(200);
+    })
+    .catch(function(err) {
+      res.sendStatus(400).send(err);
+    });
+});
+
+//update a user, especially loggedIn
+router.put('/update/:id', function(req, res) {
+  let id = req.params.id;
+  let set = req.body;
+  userService.update(id, set)
+    .then(function() {
+      res.sendStatus(200);
+    })
+    .catch(function(err) {
+      res.sendStatus(err).send(err);
+    });
+});
+
+//get the last 5 chat messages of a specific room
+router.get('/chats/:room', function(req, res, next){
+
+  let room = req.params.room;
+  db.chats.find({room: room}).limit(5).sort({_id:1}).toArray(function(err, chats){
+          if(err){
+            res.send(err);
+          }
+          res.json(chats);
+      });
+});
 
 module.exports = router;

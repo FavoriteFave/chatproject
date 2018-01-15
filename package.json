@@ -20,11 +20,11 @@
     "mongodb": "^3.0.0-rc0",
     "mongojs": "^2.4.1",
     "mongoose": "^4.13.7",
-    "mongoskin": "^2.1.0",
     "q": "^1.5.1",
     "socket.io": "^2.0.4",
     "socket.io-client": "^2.0.4",
-    "socketio-jwt": "^4.5.0"
+    "socketio-jwt": "^4.5.0",
+    "url": "^0.11.0"
   },
   "devDependencies": {
     "@angular/cli": "^1.6.0"
