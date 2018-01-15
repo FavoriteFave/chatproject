@@ -1,0 +1,14 @@
+.registrationForm {
+  margin-top: 5%;
+  margin-left: 30%;
+  height: 30vh;
+}
+
+.registrationTitle {
+  margin-top: 5%;
+  text-align: center;
+}
+
+.alert-danger {
+  text-align: center;
+}

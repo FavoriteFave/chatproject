@@ -1,0 +1,14 @@
+.loginForm {
+  margin-top: 5%;
+  margin-left: 35%;
+  height: 30vh;
+}
+
+.loginTitle {
+  margin-top: 5%;
+  text-align: center;
+}
+
+.alert-danger {
+  text-align: center;
+}

@@ -1,0 +1,21 @@
+<div class="container">
+  <h1 class="registrationTitle"> REGISTRATION </h1>
+  <hr/>
+  <div *ngIf="registrationError" class="alert alert-danger">Username already taken or invalid</div>
+  <form class="registrationForm col-sm-5" #registration="ngForm" (ngSubmit)="registerUser($event)">
+      <!-- Username Input -->
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name" required [(ngModel)]="name" name="name" maxlength="15">
+      </div>
+      <!-- Password Input -->
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" id="password" required [(ngModel)]="password" name="password">
+      </div>
+
+    <button [disabled]="loading" type="submit" class="btn btn-success">Register</button>
+    <span>already registered? go to <a routerLink="/login" routerLinkActive="active">Login!</a></span>
+  </form>
+  <hr/>
+</div>
